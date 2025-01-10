@@ -6,10 +6,10 @@ import streamlit as st
 
 # Database connection details
 db_config = {
-    'host': '107.180.118.206',
-    'user': 'growealth',
-    'password': 'growealth@123',
-    'database': 'growealth',
+    'host': st.secrets["DB_HOST"],
+    'user':  st.secrets["DB_USER"],
+    'password':  st.secrets["DB_PASSWORD"],
+    'database':  st.secrets["DB_NAME"],
 }
 
 # Function to connect to the MySQL database
