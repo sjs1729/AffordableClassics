@@ -173,6 +173,6 @@ def fetch_past_orders(mobile_no):
         st.write(f"Error: {e}")
         return None
 
-    finally:
-        if connection.is_connected():
-            connection.close()
+    #finally:
+        #if connection.is_connected():
+            #connection.close()
