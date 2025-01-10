@@ -2,9 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 from io import BytesIO
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
+
 
 # Path or URL for your logo
 LOGO_PATH = "AC_Logo.png"  # Replace with the actual path or URL
