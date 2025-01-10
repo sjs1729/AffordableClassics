@@ -16,6 +16,7 @@ db_config = {
 def connect_to_database():
     #try:
     connection = mysql.connector.connect(**db_config)
+    st.write(connection)
     return connection
     #except Error as e:
         #st.error(f"Error connecting to database: {e}")
