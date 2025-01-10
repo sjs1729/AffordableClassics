@@ -14,12 +14,12 @@ db_config = {
 
 # Function to connect to the MySQL database
 def connect_to_database():
-    try:
-        connection = mysql.connector.connect(**db_config)
-        return connection
-    except Error as e:
-        st.error(f"Error connecting to database: {e}")
-        return None
+    #try:
+    connection = mysql.connector.connect(**db_config)
+    return connection
+    #except Error as e:
+        #st.error(f"Error connecting to database: {e}")
+        #return None
 
 
 def insert_order(order_no, curr_submission, shirt_dims, additional_notes, curr_status):
