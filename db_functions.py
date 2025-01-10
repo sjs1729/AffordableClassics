@@ -14,22 +14,18 @@ db_config = {
 
 # Function to connect to the MySQL database
 def connect_to_database():
-    st.write("Connect_to_DB")
 
-    #try:
-    connection = mysql.connector.connect(**db_config)
-    st.write(connection)
-    return connection
-    #except Error as e:
-        #st.error(f"Error connecting to database: {e}")
-        #return None
+    try:
+        connection = mysql.connector.connect(**db_config)
+        return connection
+    except Error as e:
+        st.error(f"Error connecting to database: {e}")
+        return None
 
 
 def insert_order(order_no, curr_submission, shirt_dims, additional_notes, curr_status):
 
-    #st.write("Checking Connected")
-    #return 0
-    # Connect to the MySQL database
+
     connection = connect_to_database()
 
     if connection.is_connected():
@@ -157,12 +153,10 @@ def fetch_past_orders(mobile_no):
         pd.DataFrame: The resulting dataset as a Pandas DataFrame.
     """
     try:
-        st.write("function called")
         # Connect to the MySQL database
         connection = connect_to_database()
 
         if connection.is_connected():
-            st.write("Connected")
 
             # Fetch data using Pandas
             df = pd.read_sql(f"SELECT * FROM CUSTOMER_ORDERS WHERE MOBILE_NO = '{mobile_no}'", connection)
@@ -173,6 +167,6 @@ def fetch_past_orders(mobile_no):
         st.write(f"Error: {e}")
         return None
 
-    #finally:
-        #if connection.is_connected():
-            #connection.close()
+    finally:
+        if connection.is_connected():
+            connection.close()
