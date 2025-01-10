@@ -14,6 +14,8 @@ db_config = {
 
 # Function to connect to the MySQL database
 def connect_to_database():
+    st.write("Connect_to_DB")
+
     #try:
     connection = mysql.connector.connect(**db_config)
     st.write(connection)
@@ -155,17 +157,20 @@ def fetch_past_orders(mobile_no):
         pd.DataFrame: The resulting dataset as a Pandas DataFrame.
     """
     try:
-        #st.write("function called")
+        st.write("function called")
         # Connect to the MySQL database
         connection = connect_to_database()
 
         if connection.is_connected():
+            st.write("Connected")
+
             # Fetch data using Pandas
             df = pd.read_sql(f"SELECT * FROM CUSTOMER_ORDERS WHERE MOBILE_NO = '{mobile_no}'", connection)
+            
             return df
 
     except Error as e:
-        print(f"Error: {e}")
+        st.write(f"Error: {e}")
         return None
 
     finally:
