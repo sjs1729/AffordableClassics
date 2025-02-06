@@ -27,6 +27,15 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+    st.session_state.auth_name = None
+    st.session_state.auth_email = None
+    st.session_state.auth_mobile = None
+    st.session_state.auth_address = None
+
+    
 c1,c2,c3 = st.columns((10,2,10))
 c2.markdown('<BR>',unsafe_allow_html=True)
 c2.image(LOGO_PATH, width=85)  # Adjust width as needed
