@@ -53,6 +53,13 @@ CSV_FILE = "SizeChart.csv"    # Replace with the actual CSV file name
 
 order_sequence = 1
 
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+    st.session_state.auth_name = None
+    st.session_state.auth_email = None
+    st.session_state.auth_mobile = None
+    st.session_state.auth_address = None
+
 if 'sequence' not in st.session_state:
     st.session_state.sequence = 0
 
