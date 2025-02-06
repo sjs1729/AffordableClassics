@@ -341,6 +341,7 @@ def generate_pdf_report(order_no, curr_submission, shirt_dims, additional_notes,
     name = curr_submission["name"]
     mobile = curr_submission["mobile_number"]
     emailid = curr_submission["email"]
+    order_price = curr_submission["shirt_price"]
 
     masked_mobile, masked_email = mask_mobile_email(mobile, emailid)
 
@@ -442,7 +443,7 @@ def generate_pdf_report(order_no, curr_submission, shirt_dims, additional_notes,
         # -------------------------------------------------------------------------
         # We'll place the left column at x=10 mm, the right column at x ~ 150 mm.
         # Adjust as needed based on your preferred layout.
-        left_x = 10
+        left_x = 12
         left_x2 = 30
         right_x = 130
         right_x2 = 150
@@ -463,6 +464,17 @@ def generate_pdf_report(order_no, curr_submission, shirt_dims, additional_notes,
         pdf.set_xy(left_x2, top_y)
         pdf.set_font("Arial", size=12)
         pdf.cell(column_width, 10, f"{order_no}", align="L")
+
+        top_y += line_gap
+        pdf.set_xy(left_x, top_y)
+        column_width = 20  # width for the left column text
+
+        pdf.set_font("Arial", "B", 12)
+        pdf.cell(column_width, 10, f"Order Price:", align="R")
+
+        pdf.set_xy(left_x2, top_y)
+        pdf.set_font("Arial", size=12)
+        pdf.cell(column_width, 10, f" Rs. {order_price}", align="L")
 
         top_y += line_gap
         pdf.set_xy(left_x, top_y)
