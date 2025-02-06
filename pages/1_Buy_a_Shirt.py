@@ -177,12 +177,6 @@ def load_brand_data():
 df_brands = load_brand_data()
 
 
-
-
-
-    #st.write(st.session_state["order_placed"])
-
-
 if not st.session_state.authenticated:
     user_login()
     st.stop()
