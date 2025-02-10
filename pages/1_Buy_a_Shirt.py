@@ -184,10 +184,10 @@ if not st.session_state.authenticated:
 
 else:
 
-    st.markdown('<BR><BR>',unsafe_allow_html=True)
+    st.markdown('<BR>',unsafe_allow_html=True)
 
     left, right, extreme_right = st.columns([15,3,3])
-    right.markdown('<p style="{}">{}</p><BR>'.format(styles['Field_Label'], st.session_state.auth_name), unsafe_allow_html=True)
+    extreme_right.markdown('<p style="{}">{}</p>'.format(styles['Display_Info'], st.session_state.auth_name), unsafe_allow_html=True)
 
 
     if extreme_right.button('Sign-Off'):
@@ -200,8 +200,8 @@ else:
         st.rerun()
 
 
-    left.write("   ")
-    placeholder_price = left.empty()
+    #extreme_right.write("   ")
+    placeholder_price = extreme_right.empty()
 
     t_basic_info, t_conf_shirt,  t_size_guide = st.tabs(['Shirt Details','Shirt Measurements', 'Size Guide'])
 
@@ -306,13 +306,8 @@ else:
         st.markdown('<p style="{}">  </p>'.format(styles['Display_Info']), unsafe_allow_html=True)
 
         st.markdown('<BR>',unsafe_allow_html=True)
-
-
+        
         c1,c2 = st.columns((15,8))
-
-
-
-
         c1.markdown('<p style="{}">Additional Notes:</p>'.format(styles['Field_Label_Left']), unsafe_allow_html=True)
         multiline_text = c1.text_area("You can provide additional info (e.g. Actual Height / Weight, Brand and Size that best fits you, etc) ", "", height=150)
         st.markdown('<BR>',unsafe_allow_html=True)
@@ -324,7 +319,7 @@ else:
 
 
 
-        st.markdown('<BR>',unsafe_allow_html=True)
+        st.markdown('<BR><BR>',unsafe_allow_html=True)
         submitted_2 = st.button(key="button2",label="Submit Order")
 
 
@@ -451,36 +446,23 @@ else:
         #c1.dataframe(df_brands)
 
         with c4:
-            c1_1, c1_2 =st.columns((3,4))
 
             brand_list =df_brands['Brand'].unique().tolist()
-            c1_1.markdown('<p style="font-size:16px;font-weight: bold;text-align:right;vertical-align:middle;color:blue;margin-top:5px;padding:5px">Choose Brand:</p>', unsafe_allow_html=True)
-            brand = c1_2.selectbox("Brand",brand_list,0, label_visibility='collapsed')
+            brand = st.selectbox(":blue[**Select Brand**]",brand_list,0)
 
             brand_size_list = df_brands[df_brands['Brand']== brand]['Size'].tolist()
 
-            c1_1.markdown('<p style="font-size:16px;font-weight: bold;text-align:right;vertical-align:middle;color:blue;margin-top:5px;padding:5px">Brand Size:</p>', unsafe_allow_html=True)
-            brand_size = c1_2.selectbox("Brand Size",brand_size_list,0, label_visibility='collapsed')
+            brand_size = st.selectbox(":blue[**Select Brand Size**]",brand_size_list,0)
 
             dtls = df_brands[(df_brands['Brand'] == brand) & (df_brands['Size']==brand_size)].iloc[0]
 
-            c1_1.markdown('<p style="font-size:16px;font-weight: bold;text-align:right;vertical-align:middle;color:blue;margin-top:5px;padding:5px">Chest:</p>', unsafe_allow_html=True)
-            c1_2.markdown(f'<p style="font-size:16px;font-weight: bold;text-align:left;vertical-align:middle;color:red;margin-top:5px;padding:5px">{dtls["Chest"]}</p>', unsafe_allow_html=True)
+            st.markdown(get_markdown_col_fields("Chest",dtls["Chest"]), unsafe_allow_html=True)
+            st.markdown(get_markdown_col_fields("Length",dtls["Length"]), unsafe_allow_html=True)
+            st.markdown(get_markdown_col_fields("Across Shoulder",dtls["Across Shoulder"]), unsafe_allow_html=True)
+            st.markdown(get_markdown_col_fields("Waist",dtls["Waist"]), unsafe_allow_html=True)
+            st.markdown(get_markdown_col_fields("Sleeve",dtls["Sleeve"]), unsafe_allow_html=True)
+            st.markdown(get_markdown_col_fields("Collar",dtls["Collar"]), unsafe_allow_html=True)
 
-            c1_1.markdown('<p style="font-size:16px;font-weight: bold;text-align:right;vertical-align:middle;color:blue;margin-top:5px;padding:5px">Length:</p>', unsafe_allow_html=True)
-            c1_2.markdown(f'<p style="font-size:16px;font-weight: bold;text-align:left;vertical-align:middle;color:red;margin-top:5px;padding:5px">{dtls["Length"]}</p>', unsafe_allow_html=True)
-
-            c1_1.markdown('<p style="font-size:16px;font-weight: bold;text-align:right;vertical-align:middle;color:blue;margin-top:5px;padding:5px">Across Shoulder:</p>', unsafe_allow_html=True)
-            c1_2.markdown(f'<p style="font-size:16px;font-weight: bold;text-align:left;vertical-align:middle;color:red;margin-top:5px;padding:5px">{dtls["Across Shoulder"]}</p>', unsafe_allow_html=True)
-
-            c1_1.markdown('<p style="font-size:16px;font-weight: bold;text-align:right;vertical-align:middle;color:blue;margin-top:5px;padding:5px">Waist:</p>', unsafe_allow_html=True)
-            c1_2.markdown(f'<p style="font-size:16px;font-weight: bold;text-align:left;vertical-align:middle;color:red;margin-top:5px;padding:5px">{dtls["Waist"]}</p>', unsafe_allow_html=True)
-
-            c1_1.markdown('<p style="font-size:16px;font-weight: bold;text-align:right;vertical-align:middle;color:blue;margin-top:5px;padding:5px">Sleeve:</p>', unsafe_allow_html=True)
-            c1_2.markdown(f'<p style="font-size:16px;font-weight: bold;text-align:left;vertical-align:middle;color:red;margin-top:5px;padding:5px">{dtls["Sleeve"]}</p>', unsafe_allow_html=True)
-
-            c1_1.markdown('<p style="font-size:16px;font-weight: bold;text-align:right;vertical-align:middle;color:blue;margin-top:5px;padding:5px">Collar:</p>', unsafe_allow_html=True)
-            c1_2.markdown(f'<p style="font-size:16px;font-weight: bold;text-align:left;vertical-align:middle;color:red;margin-top:5px;padding:5px">{dtls["Collar"]}</p>', unsafe_allow_html=True)
 
 
 

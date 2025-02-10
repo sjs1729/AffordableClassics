@@ -145,7 +145,7 @@ else:
     st.markdown('<BR><BR>',unsafe_allow_html=True)
 
     left, right, extreme_right = st.columns([15,3,3])
-    right.markdown('<p style="{}">{}</p><BR>'.format(styles['Field_Label'], st.session_state.auth_name), unsafe_allow_html=True)
+    extreme_right.markdown('<p style="{}">{}</p>'.format(styles['Display_Info'], st.session_state.auth_name), unsafe_allow_html=True)
 
 
     if extreme_right.button('Sign-Off'):
@@ -220,8 +220,7 @@ else:
         # Get the selected color
         col1, col2, buf = st.columns([6,14,14])
 
-        display_columns = [ 'CUSTOMER_NAME', 'MOBILE_NO', 'EMAIL',
-           'SHIRT_COLOUR', 'CHEST_SIZE', 'HOW_TALL', 'BODY_TYPE', 'SHIRT_FIT','POCKETS',
+        display_columns = [ 'SHIRT_COLOUR', 'CHEST_SIZE', 'HOW_TALL', 'BODY_TYPE', 'SHIRT_FIT','POCKETS',
            'HEMLINE', 'HALF_SLEEVE', 'SHIRT_LENGTH', 'ACROSS_SHOULDER', 'WAIST',
            'COLLAR', 'SLEEVE_LENGTH']
 
@@ -238,44 +237,37 @@ else:
 
             order_dtls_dict = order_dtls[display_columns].to_dict()
 
-            col1, col2, col3, col4 = st.columns([6,12,6,12])
 
-            counter = 0
 
             for j in order_dtls_dict.keys():
-                if counter % 2 == 0:
-                    col1.markdown('<p style="{}">{}:</p><BR>'.format(styles['Field_Label_Top'],j), unsafe_allow_html=True)
-                    col2.markdown('<p style="{}">{}</p><BR>'.format(styles['Display_Info'],order_dtls_dict[j]), unsafe_allow_html=True)
+                st.markdown(get_markdown_col_fields(j,order_dtls_dict[j]), unsafe_allow_html=True)
 
-                else:
-                    col3.markdown('<p style="{}">{}:</p><BR>'.format(styles['Field_Label_Top'],j), unsafe_allow_html=True)
-                    col4.markdown('<p style="{}">{}</p><BR>'.format(styles['Display_Info'],order_dtls_dict[j]), unsafe_allow_html=True)
-
-                counter += 1
 
             if st.session_state.auth_name == "admin" or order_status in ['Initiated','Payment Done']:
+
+                st.markdown('<BR>', unsafe_allow_html=True)
+                del_button = st.button("Delete Order")
+
+                if del_button:
+                    delete_order(upd_order_number)
+                    st.rerun()
+
+
                 st.write("-------------")
 
-                col1, col2, col3 = st.columns([5,9,15])
+
 
                 def_status_key = order_status_options.index(order_status)
 
-                updated_order_status = col1.selectbox("Update Status:",order_status_options,def_status_key)
-                updated_delivery_addr = col2.text_area("Update Delievery Address ", delivery_addr,height=150)
-                updated_addl_notes = col3.text_area("Update Additional Notes", addl_notes, height=150)
+                updated_order_status = st.selectbox("Update Status:",order_status_options,def_status_key)
+                updated_delivery_addr = st.text_area("Update Delievery Address ", delivery_addr,height=150)
+                updated_addl_notes = st.text_area("Update Additional Notes", addl_notes, height=150)
 
-                upd_button = col2.button("Update Order")
+                upd_button = st.button("Update Order")
 
                 if upd_button:
-
 
                     if updated_order_status == order_status and updated_delivery_addr.strip() == delivery_addr.strip() and updated_addl_notes.strip() == addl_notes.strip():
                         st.warning("No Change Detected for update")
                     else:
                         update_order(upd_order_number, updated_order_status,updated_delivery_addr,updated_addl_notes)
-
-                del_button = col3.button("Delete Order")
-
-                if del_button:
-                    delete_order(upd_order_number)
-                    st.rerun()
