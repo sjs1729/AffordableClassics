@@ -225,56 +225,57 @@ else:
            'HEMLINE', 'HALF_SLEEVE', 'SHIRT_LENGTH', 'ACROSS_SHOULDER', 'WAIST',
            'COLLAR', 'SLEEVE_LENGTH']
 
-        col1.markdown('<p style="{}">Order Number:</p><BR><BR>'.format(styles['Field_Label']), unsafe_allow_html=True)
-        upd_order_number = col2.selectbox("Select Order Name:",[order for order in df['ORDER_NUMBER']],0,label_visibility="collapsed")
+        if len(df) > 0:
+            col1.markdown('<p style="{}">Order Number:</p><BR><BR>'.format(styles['Field_Label']), unsafe_allow_html=True)
+            upd_order_number = col2.selectbox("Select Order Name:",[order for order in df['ORDER_NUMBER']],0,label_visibility="collapsed")
 
-        order_dtls = df[df['ORDER_NUMBER'] == upd_order_number].iloc[0]
-        order_status = order_dtls['ORDER_STATUS']
-        addl_notes = order_dtls['ADDITIONAL_NOTES']
-        delivery_addr = order_dtls['DELIVERY_ADDR']
+            order_dtls = df[df['ORDER_NUMBER'] == upd_order_number].iloc[0]
+            order_status = order_dtls['ORDER_STATUS']
+            addl_notes = order_dtls['ADDITIONAL_NOTES']
+            delivery_addr = order_dtls['DELIVERY_ADDR']
 
-        #st.write(order_dtls[display_columns].to_dict())
+            #st.write(order_dtls[display_columns].to_dict())
 
-        order_dtls_dict = order_dtls[display_columns].to_dict()
+            order_dtls_dict = order_dtls[display_columns].to_dict()
 
-        col1, col2, col3, col4 = st.columns([6,12,6,12])
+            col1, col2, col3, col4 = st.columns([6,12,6,12])
 
-        counter = 0
+            counter = 0
 
-        for j in order_dtls_dict.keys():
-            if counter % 2 == 0:
-                col1.markdown('<p style="{}">{}:</p><BR>'.format(styles['Field_Label_Top'],j), unsafe_allow_html=True)
-                col2.markdown('<p style="{}">{}</p><BR>'.format(styles['Display_Info'],order_dtls_dict[j]), unsafe_allow_html=True)
+            for j in order_dtls_dict.keys():
+                if counter % 2 == 0:
+                    col1.markdown('<p style="{}">{}:</p><BR>'.format(styles['Field_Label_Top'],j), unsafe_allow_html=True)
+                    col2.markdown('<p style="{}">{}</p><BR>'.format(styles['Display_Info'],order_dtls_dict[j]), unsafe_allow_html=True)
 
-            else:
-                col3.markdown('<p style="{}">{}:</p><BR>'.format(styles['Field_Label_Top'],j), unsafe_allow_html=True)
-                col4.markdown('<p style="{}">{}</p><BR>'.format(styles['Display_Info'],order_dtls_dict[j]), unsafe_allow_html=True)
-
-            counter += 1
-
-        if st.session_state.auth_name == "admin" or order_status in ['Initiated','Payment Done']:
-            st.write("-------------")
-
-            col1, col2, col3 = st.columns([5,9,15])
-
-            def_status_key = order_status_options.index(order_status)
-
-            updated_order_status = col1.selectbox("Update Status:",order_status_options,def_status_key)
-            updated_delivery_addr = col2.text_area("Update Delievery Address ", delivery_addr,height=150)
-            updated_addl_notes = col3.text_area("Update Additional Notes", addl_notes, height=150)
-
-            upd_button = col2.button("Update Order")
-
-            if upd_button:
-
-
-                if updated_order_status == order_status and updated_delivery_addr.strip() == delivery_addr.strip() and updated_addl_notes.strip() == addl_notes.strip():
-                    st.warning("No Change Detected for update")
                 else:
-                    update_order(upd_order_number, updated_order_status,updated_delivery_addr,updated_addl_notes)
+                    col3.markdown('<p style="{}">{}:</p><BR>'.format(styles['Field_Label_Top'],j), unsafe_allow_html=True)
+                    col4.markdown('<p style="{}">{}</p><BR>'.format(styles['Display_Info'],order_dtls_dict[j]), unsafe_allow_html=True)
 
-            del_button = col3.button("Delete Order")
+                counter += 1
 
-            if del_button:
-                delete_order(upd_order_number)
-                st.rerun()
+            if st.session_state.auth_name == "admin" or order_status in ['Initiated','Payment Done']:
+                st.write("-------------")
+
+                col1, col2, col3 = st.columns([5,9,15])
+
+                def_status_key = order_status_options.index(order_status)
+
+                updated_order_status = col1.selectbox("Update Status:",order_status_options,def_status_key)
+                updated_delivery_addr = col2.text_area("Update Delievery Address ", delivery_addr,height=150)
+                updated_addl_notes = col3.text_area("Update Additional Notes", addl_notes, height=150)
+
+                upd_button = col2.button("Update Order")
+
+                if upd_button:
+
+
+                    if updated_order_status == order_status and updated_delivery_addr.strip() == delivery_addr.strip() and updated_addl_notes.strip() == addl_notes.strip():
+                        st.warning("No Change Detected for update")
+                    else:
+                        update_order(upd_order_number, updated_order_status,updated_delivery_addr,updated_addl_notes)
+
+                del_button = col3.button("Delete Order")
+
+                if del_button:
+                    delete_order(upd_order_number)
+                    st.rerun()
