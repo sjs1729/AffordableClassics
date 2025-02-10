@@ -153,7 +153,7 @@ styles = {
     "Field_Label": "font-size:16px;font-weight: bold;text-align:right;vertical-align:bottom;color:blue;margin:0px;padding:0px;line-height:32px",
     "Field_Label_Left": "font-size:16px;font-weight: bold;text-align:left;vertical-align:bottom;color:blue;margin:0px;padding:0px;line-height:32px",
     "Field_Label_Top": "font-size:16px;font-weight: bold;text-align:center;vertical-align:bottom;color:blue;margin:0px;padding:0px;line-height:32px",
-    "Display_Info": "font-size:15px;font-weight: bold;text-align:left;vertical-align:bottom;color:green;margin-top:8px;margin-bottom:4px;padding:0px;line-height:32px",
+    "Display_Info": "font-size:15px:text-align:left;vertical-align:bottom;color:green;margin:4px;padding:0px;line-height:24px",
     "Scheme Level": "background-color: #ffffff; font-style: italic;",
     "Calligraphy_Font": "font-family:'Dancing Script', cursive; font-size: 18px; color: #6a1b9a;",
     "Error_Message": "background-color: #E1A2AA; font-style: italic;margin-top:14px;margin-bottom:0px",
@@ -221,28 +221,28 @@ else:
         letters.insert(0, "gW")
         letters.insert(0, "None")
 
-        col1, buf, col2, col3 = st.columns([10,1,10,8])
+        col1, col2 = st.columns([12,8])
 
         with col1:
 
             half_sleeve=st.checkbox(":blue[**Half Sleeve?**]",value=True)
             color_option = st.selectbox(":blue[**Choose Shirt Colour**]", ["White", "Navy Blue", "Indigo", "Aqua Blue"])
             selected_color = color_map[color_option]
+            st.markdown(
+                f"""
+                <div style="width: 75px; height: 38px; background-color: {selected_color}; border: 1px solid black;margin:0px"></div><BR>
+                """,
+                unsafe_allow_html=True
+            )
             pockets = st.selectbox(":blue[**Pocket Type**]", ["No Pocket", "Single Pocket", "Double Pocket"],1)
             hemline = st.selectbox(":blue[**Shirt Hemline**]", ["Straight", "Straight with Cut","Rounded"],0)
 
 
             personalise_letter = st.selectbox(":blue[Embroidered Initials?]", letters,0, help="Do you want a Monogrammed Initials of your choice on the shirt pocket")
-
-        with col2:
-            st.markdown(
-                f"""
-                <BR><BR><div style="width: 75px; height: 38px; background-color: {selected_color}; border: 1px solid black;margin-top:32px"></div><BR><BR><BR><BR>
-                """,
-                unsafe_allow_html=True
-            )
             if personalise_letter != "None":
-                st.markdown('<BR><BR><BR><p style="{}">{}</p>'.format(styles['Calligraphy_Font'],personalise_letter), unsafe_allow_html=True)
+                st.markdown('<p style="{}">{}</p>'.format(styles['Calligraphy_Font'],personalise_letter), unsafe_allow_html=True)
+
+
 
         st.markdown('<BR>',unsafe_allow_html=True)
         submitted_1 = st.button(key="button1",label="Submit Order")
@@ -254,23 +254,10 @@ else:
 
 
         # Get the selected color
-        col1, buf, col2, col3 = st.columns([10,0.2,8,5])
+        col1, col2 = st.columns([12,8])
 
         with col1:
             how_tall = st.selectbox(":blue[**How Tall are you?**]", ["Short", "Average", "Tall","Very Tall"],1)
-
-            body_type = st.selectbox(":blue[**Body Type**]", ["Skinny", "Slim","Regular","Overweight","Significantly Overweight"],2)
-
-            chest_size = st.selectbox(":blue[**Chest Size**]", [a for a in range(36,51)],11,help="Snugly fit measuring tape wrapped around the chest")
-
-            shirt_fit = st.selectbox(":blue[**Fit**]", ["Loose", "Regular", "Slim"],1)
-
-
-
-
-
-        with col2:
-            st.markdown('<BR>', unsafe_allow_html=True)
 
             if how_tall == "Short":
                 st.markdown('<p style="{}">Less than 5 Feet 5 inch</p>'.format(styles['Display_Info']), unsafe_allow_html=True)
@@ -281,7 +268,10 @@ else:
             else:
                 st.markdown('<p style="{}">Greater than 6 Feet</p>'.format(styles['Display_Info']), unsafe_allow_html=True)
 
-            st.markdown('<BR><p style="{}">  </p>'.format(styles['Display_Info']), unsafe_allow_html=True)
+            st.markdown('<p style="{}">  </p>'.format(styles['Display_Info']), unsafe_allow_html=True)
+
+
+            body_type = st.selectbox(":blue[**Body Type**]", ["Skinny", "Slim","Regular","Overweight","Significantly Overweight"],2)
 
             if body_type == "Skinny":
                 st.markdown('<p style="{}">BMI less than 18</p>'.format(styles['Display_Info']), unsafe_allow_html=True)
@@ -294,17 +284,33 @@ else:
             else:
                 st.markdown('<p style="{}">BMI greater than 30</p>'.format(styles['Display_Info']), unsafe_allow_html=True)
 
+            st.markdown('<p style="{}">  </p>'.format(styles['Display_Info']), unsafe_allow_html=True)
+
+            chest_size = st.selectbox(":blue[**Chest Size**]", [a for a in range(36,51)],11,help="Snugly fit measuring tape wrapped around the chest")
+
+            shirt_fit = st.selectbox(":blue[**Fit**]", ["Loose", "Regular", "Slim"],1)
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+        st.markdown('<p style="{}">  </p>'.format(styles['Display_Info']), unsafe_allow_html=True)
+
+        st.markdown('<BR>',unsafe_allow_html=True)
 
 
         c1,c2 = st.columns((15,8))
 
 
-        st.markdown('<BR>',unsafe_allow_html=True)
 
 
         c1.markdown('<p style="{}">Additional Notes:</p>'.format(styles['Field_Label_Left']), unsafe_allow_html=True)
@@ -437,14 +443,14 @@ else:
 
         c1,buf,c4 = st.columns((4,1,4))
 
-        c4.markdown('<BR><p style="font-size:18px;font-weight: bold;text-align:center;vertical-align:middle;color:blue;margin:0px;padding:0px">Size Guide</p>', unsafe_allow_html=True)
-        c4.image("SizeGuide.PNG", width=400)  # Adjust width as needed
+        c1.markdown('<BR><p style="font-size:18px;font-weight: bold;text-align:center;vertical-align:middle;color:blue;margin:0px;padding:0px">Size Guide</p>', unsafe_allow_html=True)
+        c1.image("SizeGuide.PNG", width=400)  # Adjust width as needed
 
-        c1.markdown('<BR><BR>',unsafe_allow_html=True)
+        c4.markdown('<BR><BR>',unsafe_allow_html=True)
 
         #c1.dataframe(df_brands)
 
-        with c1:
+        with c4:
             c1_1, c1_2 =st.columns((3,4))
 
             brand_list =df_brands['Brand'].unique().tolist()
