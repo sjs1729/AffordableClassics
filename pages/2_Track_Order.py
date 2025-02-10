@@ -218,15 +218,14 @@ else:
         order_status_options = ['Initiated','Payment Done','In Progress','Ready for Delivery','Delivered','Cancelled']
 
         # Get the selected color
-        col1, col2, buf = st.columns([6,14,14])
 
         display_columns = [ 'SHIRT_COLOUR', 'CHEST_SIZE', 'HOW_TALL', 'BODY_TYPE', 'SHIRT_FIT','POCKETS',
            'HEMLINE', 'HALF_SLEEVE', 'SHIRT_LENGTH', 'ACROSS_SHOULDER', 'WAIST',
            'COLLAR', 'SLEEVE_LENGTH']
 
         if len(df) > 0:
-            col1.markdown('<p style="{}">Order Number:</p><BR><BR>'.format(styles['Field_Label']), unsafe_allow_html=True)
-            upd_order_number = col2.selectbox("Select Order Name:",[order for order in df['ORDER_NUMBER']],0,label_visibility="collapsed")
+            upd_order_number = st.selectbox(":blue[**Select Order Number:**]",[order for order in df['ORDER_NUMBER']],0)
+            st.markdown('<BR>', unsafe_allow_html=True)
 
             order_dtls = df[df['ORDER_NUMBER'] == upd_order_number].iloc[0]
             order_status = order_dtls['ORDER_STATUS']
