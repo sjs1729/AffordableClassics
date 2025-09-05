@@ -66,4 +66,4 @@ c1.markdown(html_subtext, unsafe_allow_html=True)
 
 st.markdown('<BR><p style="font-size:18px;font-weight: bold;text-align:left;vertical-align:middle;color:blue;margin:0px;padding:0px">Contact:</p>', unsafe_allow_html=True)
 st.markdown(":phone: +91 9836064237")
-st.markdown(":email: [helpdesk@gro-wealth.in](emailto:helpdesk@gro-wealth.in)")
+st.markdown(":email: [helpdesk@gro-wealth.in](emailto:saha.sanjoy@gmail.in)")

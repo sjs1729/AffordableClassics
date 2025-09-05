@@ -40,7 +40,7 @@ def mask_mobile_email(mobile_no, email):
 
     masked_email = "".join(email_chars)
 
-    st.write(masked_email, masked_mobile_no)
+    #st.write(masked_email, masked_mobile_no)
 
     return masked_mobile_no, masked_email
 
