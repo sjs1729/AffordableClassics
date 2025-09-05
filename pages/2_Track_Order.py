@@ -141,7 +141,7 @@ c2.markdown('<p style="font-size:40px;font-weight: bold;text-align:center;vertic
 styles = {
     "Field_Label": "font-size:16px;font-weight: bold;text-align:right;vertical-align:bottom;color:blue;margin:0px;padding:0px;line-height:32px",
     "Field_Label_Top": "font-size:14px;font-weight: bold;text-align:right;vertical-align:bottom;color:red;margin:0px;padding:0px;line-height:18px",
-    "Display_Info": "font-size:14px;font-weight: bold;text-align:left;vertical-align:bottom;color:blue;margin-top:0px;margin-bottom:0px;padding:0px;line-height:18px",
+    "Display_Info": "font-size:15px:text-align:left;vertical-align:bottom;color:green;margin:4px;padding:0px;line-height:24px",
     "Display_Info_Center": "font-size:14px;font-weight: bold;text-align:center;vertical-align:bottom;color:blue;margin-right:30px;margin-top:0px;margin-bottom:0px;padding:4px;line-height:18px",
     "Scheme Level": "background-color: #ffffff; font-style: italic;",
     "Calligraphy_Font": "font-family:'Dancing Script', cursive; font-size: 18px; color: #6a1b9a;",
