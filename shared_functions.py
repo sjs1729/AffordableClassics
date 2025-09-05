@@ -17,8 +17,9 @@ color_map = {
     "Navy Blue": "Navy Blue.jpg",
     "Indigo": "Indigo.jpg",
     "Aqua Blue": "Aqua Blue.jpg",
+    "Beach Print": "Beach Print.jpg",
     "Polka Denim": "Polka Denim.jpg",
-    "Beach Print": "Beach Print.jpg"
+    "Beach Party": "Beach Party.jpg"
 }
 
 
