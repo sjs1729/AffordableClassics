@@ -169,7 +169,7 @@ def shirt_price(color_option,how_tall, body_type, personalise_letter):
     price = 699
     if color_option == 'Polka Denim':
         price = price + 100
-    elif color_option == 'Beach Print':
+    elif color_option == 'Beach Party':
         price = price + 50
 
     if body_type == 'Significantly Overweight' and how_tall == 'Very Tall':
@@ -228,8 +228,9 @@ else:
             "Navy Blue": "Navy Blue.jpg",
             "Indigo": "Indigo.jpg",
             "Aqua Blue": "Aqua Blue.jpg",
+            "Beach Print": "Beach Print.jpg",
             "Polka Denim": "Polka Denim.jpg",
-            "Beach Print": "Beach Print.jpg"
+            "Beach Party": "Beach Party.jpg"
         }
         letters = [chr(i) for i in range(65, 91)]
         letters.insert(0, "gW")
@@ -240,7 +241,7 @@ else:
         with col1:
 
             half_sleeve=st.checkbox(":blue[**Half Sleeve?**]",value=True)
-            color_option = st.selectbox(":blue[**Choose Shirt Colour**]", ["White", "Navy Blue", "Indigo", "Aqua Blue", "Beach Print","Polka Denim"])
+            color_option = st.selectbox(":blue[**Choose Shirt Colour**]", ["White", "Navy Blue", "Indigo", "Aqua Blue", "Beach Party","Polka Denim"])
             #selected_color = color_map[color_option]
             st.image(f"{color_option}.jpg", width=120)
             pockets = st.selectbox(":blue[**Pocket Type**]", ["No Pocket", "Single Pocket", "Double Pocket"],1)
