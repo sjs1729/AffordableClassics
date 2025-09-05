@@ -13,10 +13,12 @@ import datetime as dt
 
 
 color_map = {
-    "White": "#F8F6F8",
-    "Navy Blue": "#000080",
-    "Indigo": "#4B0082",
-    "Aqua Blue": "#217FA2"
+    "White": "White.jpg",
+    "Navy Blue": "Navy Blue.jpg",
+    "Indigo": "Indigo.jpg",
+    "Aqua Blue": "Aqua Blue.jpg",
+    "Polka Denim": "Polka Denim.jpg",
+    "Beach Print": "Beach Print.jpg"
 }
 
 
@@ -26,7 +28,7 @@ def mask_mobile_email(mobile_no, email):
 
     for i in range(len(mobile_no)):
         if i % 2 == 1:
-            digits[i]='X'
+            digits[i]='*'
 
     masked_mobile_no = "".join(digits)
 
@@ -34,9 +36,11 @@ def mask_mobile_email(mobile_no, email):
 
     for i in range(len(email)):
         if i % 2 == 1:
-            email_chars[i]='X'
+            email_chars[i]='*'
 
     masked_email = "".join(email_chars)
+
+    st.write(masked_email, masked_mobile_no)
 
     return masked_mobile_no, masked_email
 
@@ -197,26 +201,43 @@ def calculate_across_shoulder(chest):
     return nearest_point_5(8 + chest * 0.25)
 
 def calculate_shirt_length(chest, height, bmi):
-    shirt_length = nearest_point_5(18 + chest * 0.25)
+    #shirt_length = nearest_point_5(18 + chest * 0.25)
 
     if height >= 72:
-        shirt_length = shirt_length + 0.5
+        shirt_length = 30
+    elif height >= 69:
+        shirt_length = 29.5
+    elif height >= 66:
+        shirt_length = 28.5
     elif height < 65:
         shirt_length = shirt_length - 0.5
 
     if bmi >= 30:
         shirt_length = shirt_length + 0.5
+    elif bmi <=22:
+        shirt_length = shirt_length - 0.5
+
 
     return shirt_length
 
-def calculate_waist_length(chest, bmi):
+def calculate_waist_length(chest, shirt_fit, bmi):
 
-    if bmi > 27 and bmi <= 30:
-        waist_length = chest - 0.5
-    elif bmi > 30:
+    if bmi > 30:
         waist_length = chest
+    elif bmi > 27 and bmi <= 30:
+        waist_length = chest - 0.5
+    elif bmi > 22 and bmi <= 27:
+        waist_length = chest -1
+    elif bmi > 18 and bmi <= 22:
+        waist_length = chest -1.5
     else:
-        waist_length = chest - 1
+        waist_length = chest - 2
+
+    if shirt_fit == 'Slim':
+        waist_length = waist_length - 0.5
+    elif shirt_fit == 'Loose':
+        waist_length = waist_length + 0.5
+
 
     return waist_length
 
@@ -246,20 +267,24 @@ def calculate_sleeve_length(shirt_length, half_sleeve=True):
 
 def calculate_collar_length(chest):
 
-    if chest <= 38:
+    if chest < 38:
         collar_length = 15.5
-    elif chest <= 40:
+    elif chest in [38, 39]:
         collar_length = 16
-    elif chest <= 42:
+    elif chest in [40, 41]:
         collar_length = 16.5
-    else:
+    elif chest in [42, 43]:
         collar_length = 17
+    elif chest in [44, 45]:
+        collar_length = 17.5
+    else:
+        collar_length = 18
 
     return collar_length
 
 
 
-def calculate_recommended_dimensions(height, bmi, chest, half_sleeve='Y'):
+def calculate_recommended_dimensions(shirt_fit,height, bmi, chest, half_sleeve='Y'):
     # Filter the dataframe for the selected brand and size
 
     #bmi = calculate_bmi(height, weight)
@@ -268,7 +293,7 @@ def calculate_recommended_dimensions(height, bmi, chest, half_sleeve='Y'):
 
     shirt_length = calculate_shirt_length(chest, height, bmi)
 
-    waist_length = calculate_waist_length(chest, bmi)
+    waist_length = calculate_waist_length(chest,shirt_fit, bmi)
 
     sleeve_length = calculate_sleeve_length(shirt_length, half_sleeve)
 
@@ -317,7 +342,8 @@ def show_logo():
     c3.image(LOGO_PATH, width=75)  # Adjust width as needed
 
 
-def generate_pdf_report(order_no, curr_submission, shirt_dims, additional_notes, curr_status):
+@st.cache_data()
+def generate_pdf_report(order_no, curr_submission, shirt_dims, additional_notes, curr_status,price_flag="Y"):
 
 
     #st.write(curr_submission)
@@ -348,7 +374,7 @@ def generate_pdf_report(order_no, curr_submission, shirt_dims, additional_notes,
     delivery_address = curr_submission["delivery_addr"]
 
     color = curr_submission["color_option"]
-    fc_red, fc_green, fc_blue = hex_to_rgb(color_map[color])
+    #fc_red, fc_green, fc_blue = hex_to_rgb(color_map[color])
 
     #curr_submission["chest_size"],
     height = curr_submission["how_tall"]
@@ -470,7 +496,7 @@ def generate_pdf_report(order_no, curr_submission, shirt_dims, additional_notes,
         column_width = 20  # width for the left column text
 
         pdf.set_font("Arial", "B", 12)
-        pdf.cell(column_width, 10, f"Order Price:", align="R")
+        pdf.cell(column_width, 10, f"Order Amount:", align="R")
 
         pdf.set_xy(left_x2, top_y)
         pdf.set_font("Arial", size=12)
@@ -553,12 +579,14 @@ def generate_pdf_report(order_no, curr_submission, shirt_dims, additional_notes,
         pdf.set_xy(right_x2, top_y)
         pdf.set_font("Arial", size=12)
         #pdf.cell(column_width, 10, f"{color}", align="L")
-        pdf.set_fill_color(fc_red, fc_green, fc_blue)
+        #pdf.set_fill_color(fc_red, fc_green, fc_blue)
 
-        pdf.rect(right_x2+3, top_y+2, 10, 5, style='DF')
+        #pdf.rect(right_x2+3, top_y+2, 10, 5, style='DF')
+
+        pdf.image(color_map[color], x=right_x2+3, y=top_y+2, w=13)
 
 
-        top_y += line_gap
+        top_y += 2*line_gap
         pdf.set_xy(right_x, top_y)
         column_width = 20  # width for the left column text
 
@@ -586,11 +614,11 @@ def generate_pdf_report(order_no, curr_submission, shirt_dims, additional_notes,
         column_width = 20  # width for the left column text
 
         pdf.set_font("Arial", "B", 12)
-        pdf.cell(column_width, 10, f"Embroidered Initials:", align="R")
+        #pdf.cell(column_width, 10, f"Embroidered Initials:", align="R")
 
         pdf.set_xy(right_x2, top_y)
         pdf.set_font("Arial", size=12)
-        pdf.cell(column_width, 10, f"{curr_submission['personalise_letter']}", align="L")
+        #pdf.cell(column_width, 10, f"{curr_submission['personalise_letter']}", align="L")
 
 
         if additional_notes.strip():
@@ -629,15 +657,18 @@ def generate_pdf_report(order_no, curr_submission, shirt_dims, additional_notes,
         # 6. Save the generated PDF
         # -------------------------------------------------------------------------
 
-        pdf.set_xy(83, 130)
+        pdf.set_xy(105, 125)
         pdf.set_font("Arial", "BU", 14)
         pdf.cell(40, 10, "Recommended Measurements", border=0, ln=1, align='C')
 
-        pdf.image("SizeGuide.PNG", x=50 , y=140, w=60)
+        pdf.image("SizeGuide.PNG", x=60 , y=135, w=60)
 
 
         top_y = 140
-        top_x = 185
+        top_x = 220
+        right_x = right_x + 10
+        right_x2 = right_x2 + 10
+
         pdf.set_xy(right_x, top_y)
         column_width = 20  # width for the left column text
 

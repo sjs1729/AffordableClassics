@@ -38,7 +38,7 @@ def user_login():
 
 
     # Tabs for Sign-up and Login
-    tab1, tab2 = mid.tabs(["  Sign-in  ", "  Sign-up  "])
+    tab1, tab2, tab3 = mid.tabs(["  Sign-in  ", "  Sign-up  ", "Change Password"])
 
     # Sign-up Tab
     with tab2:
@@ -94,21 +94,39 @@ def user_login():
         login_password = st.text_input("Password", type="password", key="login_password")
         if st.button("Log In"):
             if login_email and login_password:
-                auth_df = authenticate_user(login_email, login_password)
-                auth_passwd = auth_df['PASSWORD'].iloc[0]
+                auth = authenticate_user(login_email, login_password)
+                #auth_passwd = auth_df['PASSWORD'].iloc[0]
+                if auth:
+                    cust_name, auth_email, auth_passwd, cust_mobile, cust_addr = auth
+                    if hash_password(login_password) == auth_passwd:
+                        st.session_state.authenticated = True
+                        st.session_state.auth_name = cust_name
+                        st.session_state.auth_email = auth_email
+                        st.session_state.auth_mobile = cust_mobile
+                        st.session_state.auth_address = cust_addr
 
-                if hash_password(login_password) == auth_passwd:
-                    st.session_state.authenticated = True
-                    st.session_state.auth_name = auth_df['CUSTOMER_NAME'].iloc[0]
-                    st.session_state.auth_email = auth_df['EMAIL'].iloc[0]
-                    st.session_state.auth_mobile = auth_df['MOBILE_NUMBER'].iloc[0]
-                    st.session_state.auth_address = auth_df['CUSTOMER_ADDRESS'].iloc[0]
+                        st.rerun()
+                else:
+                    st.error("Invalid Username or Password")
 
-                if st.session_state.authenticated:
-                    st.write("User is authenticated")
-                    st.write(st.session_state.auth_name)
-                    st.write(st.session_state.auth_email)
-                    st.write(st.session_state.auth_mobile)
-                    st.write(st.session_state.auth_address)
 
-                    st.rerun()
+    with tab3:
+        #st.header("Log In")
+        login_email = st.text_input("Email Address", key="login_email_chg_passwd")
+        login_old_password = st.text_input("Old Password", type="password", key="old_login_password")
+        login_new_password = st.text_input("New Password", type="password", key="new_login_password")
+        login_renter_new_password = st.text_input("Re Enter New Password", type="password", key="re_new_login_password")
+
+
+        if st.button("Change Password"):
+            if login_email and login_old_password and login_new_password and login_renter_new_password:
+
+                if login_new_password != login_renter_new_password:
+
+                    st.warning("New Password and Re-Enter New Password is not matching. Pls try again")
+                else:
+                    auth = authenticate_user(login_email, login_old_password)
+                    cust_name, auth_email, auth_passwd, cust_mobile, cust_addr = auth
+
+                    if len(auth_email) > 0:
+                        chg_passwd(email,login_new_password )

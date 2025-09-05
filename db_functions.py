@@ -289,6 +289,21 @@ def add_user(name, email, mobile_number, password, addr):
             cursor.close()
             connection.close()
 
+def chg_passwd(email, new_password):
+    connection = connect_to_database()
+    if connection.is_connected():
+        try:
+            cursor = connection.cursor()
+            hashed_new_pw = hash_password(new_password)
+            upd_pass_str = 'UPDATE USERS SET PASSWORD=%s WHERE EMAIL=%s'
+            cursor.execute(upd_pass_str, (hashed_new_pw, email))
+            connection.commit()
+            st.success("Password Changed successfully! You can now log in with your new Password.")
+        except Error as e:
+            st.error(f"Error: {e}")
+        finally:
+            cursor.close()
+            connection.close()
 
 def authenticate_user(email, password):
     connection = connect_to_database()
@@ -296,18 +311,19 @@ def authenticate_user(email, password):
         try:
             cursor = connection.cursor()
             hashed_pw = hash_password(password)
-            cursor.execute("SELECT * FROM USERS WHERE email = %s AND password = %s", (email, hashed_pw))
+            cursor.execute("SELECT CUSTOMER_NAME, EMAIL, PASSWORD, MOBILE_NUMBER, CUSTOMER_ADDRESS FROM USERS WHERE email = %s AND password = %s", (email, hashed_pw))
             user = cursor.fetchone()
             return user
         except Error as e:
-            st.error(f"Error: {e}")
+            st.error(f"Error: User not Authenticated. Invalid username or password")
+            st.stop()
             return None
         finally:
             cursor.close()
             connection.close()
 
 
-def authenticate_user(email, password):
+def authenticate_userid(email):
 
     auth_user = {'status':0, 'user_id':'','name':'', 'mobile_no':'', 'address':''}
 
