@@ -100,8 +100,6 @@ def generate_html_table(df_table):
 
     return table_html
 
-
-
 def render_order_attributes(data: dict, attrs_per_row: int = 3):
     """
     Render dictionary attributes as an HTML table in Streamlit.
@@ -124,6 +122,14 @@ def render_order_attributes(data: dict, attrs_per_row: int = 3):
 
     html += "</table>"
     return html
+
+if st.session_state.auth_name != "admin":
+    st.info('You do not have access to this page', icon="ℹ️")
+    time.sleep(2)
+    user_login()
+    st.stop()
+
+
 
 
 
@@ -164,11 +170,11 @@ if not st.session_state.authenticated:
 
 
 else:
-    #st.markdown('<BR>',unsafe_allow_html=True)
+    #st.markdown('<BR><BR>',unsafe_allow_html=True)
 
     left, right, extreme_right = st.columns([15,3,3])
-    extreme_right.markdown('<p style="{}">{}</p>'.format(styles['Display_Info_Center'], st.session_state.auth_name), unsafe_allow_html=True)
-    st.markdown('<p>',unsafe_allow_html=True)
+    extreme_right.markdown('<p style="{}">{}</p>'.format(styles['Display_Info'], st.session_state.auth_name), unsafe_allow_html=True)
+
 
     if extreme_right.button('Sign-Off'):
         st.write(f"{st.session_state.auth_name} has been logged off")
@@ -179,13 +185,22 @@ else:
         st.session_state.auth_address = None
         time.sleep(2)
         st.rerun()
-    t_track_orders, t_update_orders = st.tabs(['Track Orders','Update Orders'])
+    t_track_orders, t_update_orders, t_chg_passwd = st.tabs(['Track Orders','Update Orders','Change Password'])
+
+    with t_chg_passwd:
+        login_email = st.text_input("Email Address", key="login_email")
+        login_new_password = st.text_input("New Password", type="password", key="new_login_password")
+
+
+        if st.button("Change Password"):
+            if login_email and login_new_password:
+                chg_passwd(login_email,login_new_password)
+
 
     with t_track_orders:
 
 
         df = fetch_all_orders(st.session_state.auth_email)
-        df['ORDER_PRICE']= df['ORDER_PRICE'].apply(lambda x: f"Rs. {x}" if pd.notna(x) else "NA")
         disp_columns_admin = ['ORDER_NUMBER','CUSTOMER_NAME','MOBILE_NO','EMAIL','SHIRT_COLOUR','CHEST_SIZE','ORDER_STATUS','ORDER_PRICE']
         disp_columns = ['ORDER_NUMBER','SHIRT_COLOUR','CHEST_SIZE','ORDER_STATUS','ORDER_PRICE']
 
@@ -245,6 +260,7 @@ else:
            'SHIRT_COLOUR', 'CHEST_SIZE', 'HOW_TALL', 'BODY_TYPE', 'SHIRT_FIT','POCKETS','HEMLINE',
            'HALF_SLEEVE', 'SHIRT_LENGTH', 'ACROSS_SHOULDER', 'WAIST','COLLAR', 'SLEEVE_LENGTH']
 
+
         if len(df) > 0:
             upd_order_number = st.selectbox(":blue[**Select Order Number:**]",[order for order in df['ORDER_NUMBER']],0)
             st.markdown('<BR>', unsafe_allow_html=True)
@@ -259,12 +275,11 @@ else:
 
             order_dtls_dict = order_dtls[display_columns].to_dict()
 
-            html_text = render_order_attributes(order_dtls_dict)
-            st.markdown(html_text, unsafe_allow_html=True)
 
             #st.write(order_dtls_dict)
 
-
+            html_text = render_order_attributes(order_dtls_dict)
+            st.markdown(html_text, unsafe_allow_html=True)
 
             current_submission = {
                 "name": order_dtls_dict['CUSTOMER_NAME'],
@@ -294,7 +309,9 @@ else:
                 }
 
             pdf_bytes = generate_pdf_report(order_no, current_submission, dims, addl_notes, order_status)
+
             st.markdown('<BR>', unsafe_allow_html=True)
+
 
             # Create a download button for the PDF
             col1, col2, buf = st.columns((2,2,8))
@@ -304,7 +321,7 @@ else:
                 key='download_button_1',
                 file_name="Order_Summary_{}.pdf".format(st.session_state.auth_name)
             )
-
+            st.write("-------------")
 
             if st.session_state.auth_name == "admin" or order_status in ['Initiated','Payment Done']:
 
@@ -318,11 +335,12 @@ else:
 
 
 
+
                 def_status_key = order_status_options.index(order_status)
 
-                updated_order_status = st.selectbox(":blue[**Update Status**]",order_status_options,def_status_key)
-                updated_delivery_addr = st.text_area(":blue[**Update Delievery Address**]", delivery_addr,height=150)
-                updated_addl_notes = st.text_area(":blue[**Update Additional Notes**]", addl_notes, height=150)
+                updated_order_status = st.selectbox("Update Status:",order_status_options,def_status_key)
+                updated_delivery_addr = st.text_area("Update Delievery Address ", delivery_addr,height=150)
+                updated_addl_notes = st.text_area("Update Additional Notes", addl_notes, height=150)
 
                 upd_button = st.button("Update Order")
 

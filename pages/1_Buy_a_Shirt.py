@@ -86,6 +86,10 @@ def submit_order(current_submission, dims, multiline_text, order_status, databas
 
     order_no = generate_order_no()
 
+    #st.write(order_no, current_submission, dims, multiline_text, order_status)
+
+    #st.stop()
+
     if database_off == "N":
         order_insert_status = insert_order(order_no,current_submission,dims,multiline_text,order_status)
         if order_insert_status == 0:
@@ -161,11 +165,19 @@ styles = {
 
 }
 
-def shirt_price(personalise=False):
-    if personalise == "None":
-        return 699
-    else:
-        return 749
+def shirt_price(color_option,how_tall, body_type, personalise_letter):
+    price = 699
+    if color_option == 'Polka Denim':
+        price = price + 100
+    elif color_option == 'Beach Print':
+        price = price + 50
+
+    if body_type == 'Significantly Overweight' and how_tall == 'Very Tall':
+        price = price + 50
+
+    return price
+
+
 
 
 # Load brand size data
@@ -210,12 +222,14 @@ else:
 
         st.markdown('<BR>', unsafe_allow_html=True)
 
-        # Map the selected option to colors
+        # Map the selected option to color
         color_map = {
-            "White": "#FFFFFF",
-            "Navy Blue": "#000080",
-            "Indigo": "#4B0082",
-            "Aqua Blue": "#217FA2"
+            "White": "White.jpg",
+            "Navy Blue": "Navy Blue.jpg",
+            "Indigo": "Indigo.jpg",
+            "Aqua Blue": "Aqua Blue.jpg",
+            "Polka Denim": "Polka Denim.jpg",
+            "Beach Print": "Beach Print.jpg"
         }
         letters = [chr(i) for i in range(65, 91)]
         letters.insert(0, "gW")
@@ -226,22 +240,20 @@ else:
         with col1:
 
             half_sleeve=st.checkbox(":blue[**Half Sleeve?**]",value=True)
-            color_option = st.selectbox(":blue[**Choose Shirt Colour**]", ["White", "Navy Blue", "Indigo", "Aqua Blue"])
-            selected_color = color_map[color_option]
-            st.markdown(
-                f"""
-                <div style="width: 75px; height: 38px; background-color: {selected_color}; border: 1px solid black;margin:0px"></div><BR>
-                """,
-                unsafe_allow_html=True
-            )
+            color_option = st.selectbox(":blue[**Choose Shirt Colour**]", ["White", "Navy Blue", "Indigo", "Aqua Blue", "Beach Print","Polka Denim"])
+            #selected_color = color_map[color_option]
+            st.image(f"{color_option}.jpg", width=120)
             pockets = st.selectbox(":blue[**Pocket Type**]", ["No Pocket", "Single Pocket", "Double Pocket"],1)
             hemline = st.selectbox(":blue[**Shirt Hemline**]", ["Straight", "Straight with Cut","Rounded"],0)
 
 
-            personalise_letter = st.selectbox(":blue[Embroidered Initials?]", letters,0, help="Do you want a Monogrammed Initials of your choice on the shirt pocket")
+            #personalise_letter = st.selectbox(":blue[Embroidered Initials?]", letters,0, help="Do you want a Monogrammed Initials of your choice on the shirt pocket")
+            personalise_letter = "None"
+
             if personalise_letter != "None":
                 st.markdown('<p style="{}">{}</p>'.format(styles['Calligraphy_Font'],personalise_letter), unsafe_allow_html=True)
 
+            shirt_fit = st.selectbox(":blue[**Fit**]", ["Loose", "Regular", "Slim"],1)
 
 
         st.markdown('<BR>',unsafe_allow_html=True)
@@ -288,7 +300,6 @@ else:
 
             chest_size = st.selectbox(":blue[**Chest Size**]", [a for a in range(36,51)],11,help="Snugly fit measuring tape wrapped around the chest")
 
-            shirt_fit = st.selectbox(":blue[**Fit**]", ["Loose", "Regular", "Slim"],1)
 
 
 
@@ -306,7 +317,7 @@ else:
         st.markdown('<p style="{}">  </p>'.format(styles['Display_Info']), unsafe_allow_html=True)
 
         st.markdown('<BR>',unsafe_allow_html=True)
-        
+
         c1,c2 = st.columns((15,8))
         c1.markdown('<p style="{}">Additional Notes:</p>'.format(styles['Field_Label_Left']), unsafe_allow_html=True)
         multiline_text = c1.text_area("You can provide additional info (e.g. Actual Height / Weight, Brand and Size that best fits you, etc) ", "", height=150)
@@ -315,7 +326,7 @@ else:
 
         ignore_duplicate_order = st.checkbox("Ignore Duplicate/Multiple Order", value=False, help="Check this box if you want to allow same/duplicate order to be submitted")
 
-        placeholder_price.markdown(f":green[**Shirt Price: {display_amount(shirt_price(personalise_letter))}**]")
+        placeholder_price.markdown(f":green[**Shirt Price: {display_amount(shirt_price(color_option,how_tall, body_type, personalise_letter))}**]")
 
 
 
@@ -346,7 +357,7 @@ else:
             "hemline":hemline,
             "half_sleeve": half_sleeve,
             "shirt_fit":shirt_fit,
-            "shirt_price": shirt_price(personalise_letter)
+            "shirt_price": shirt_price(color_option,how_tall, body_type, personalise_letter)
 
         }
 
@@ -372,7 +383,7 @@ else:
             bmi = 32
 
 
-        dims = calculate_recommended_dimensions(height, bmi, chest_size, half_sleeve)
+        dims = calculate_recommended_dimensions(shirt_fit, height, bmi, chest_size, half_sleeve)
 
         #st.write(current_submission['email'])
 
@@ -417,21 +428,6 @@ else:
 
 
 
-    #with t_my_orders:
-
-    #    if mobile_number:
-
-    #        df_orders = fetch_past_orders(mobile_number)
-
-    #        if len(df_orders) > 0:
-    #            st.markdown('<p style="{}">Past Orders for Mobile No - {}</p><BR>'.format(styles['Field_Label_Left'],mobile_number), unsafe_allow_html=True)
-
-    #            st.dataframe(df_orders)
-    #        else:
-    #            st.markdown('<BR><p style="font-size:16px;font-weight: bold;text-align:center;vertical-align:middle;color:blue;margin:0px;padding:0px">No Orders exists for you</p>', unsafe_allow_html=True)
-
-    #    else:
-    #        st.markdown('<BR><p style="font-size:16px;font-weight: bold;text-align:center;vertical-align:middle;color:blue;margin:0px;padding:0px">No Orders exists for you</p>', unsafe_allow_html=True)
 
 
     with t_size_guide:
