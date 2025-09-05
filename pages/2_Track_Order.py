@@ -167,7 +167,7 @@ else:
     #st.markdown('<BR>',unsafe_allow_html=True)
 
     left, right, extreme_right = st.columns([15,3,3])
-    extreme_right.markdown('<p style="{}">{}</p>'.format(styles['Display_Info_Center'], st.session_state.auth_name), unsafe_allow_html=True)
+    extreme_right.markdown('<p style="{}">{}</p>'.format(styles['Display_Info'], st.session_state.auth_name), unsafe_allow_html=True)
     st.markdown('<p>',unsafe_allow_html=True)
 
     if extreme_right.button('Sign-Off'):
