@@ -19,13 +19,6 @@ st.set_page_config(
     layout="wide"
     )
 
-# Hide Streamlit menu and footer
-hide_streamlit_style = """
-        <style>
-        .stToolbarActions {display: none !important;}
-        </style>
-        """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 def send_email(to_email, subject, body,
                from_email="sender@example.com",
@@ -173,7 +166,7 @@ styles = {
 }
 
 def shirt_price(color_option,how_tall, body_type, personalise_letter):
-    price = 699
+    price = 749
     if color_option == 'Polka Denim':
         price = price + 100
     elif color_option == 'Beach Party':
@@ -251,6 +244,17 @@ else:
             color_option = st.selectbox(":blue[**Choose Shirt Colour**]", ["White", "Navy Blue", "Indigo", "Aqua Blue", "Beach Party","Polka Denim"])
             #selected_color = color_map[color_option]
             st.image(f"{color_option}.jpg", width=120)
+            fabric = "Linen Blend"
+
+            if color_option == "Beach Party":
+                fabric = "Cotton"
+            elif color_option == "Polka Denim":
+                fabric = "Denim"
+
+            st.markdown('<span style="font-weight: bold;color:#42B72A;margin:0px;padding:0px">Shirt Fabric: </span><span  style="color:#1877F2;margin:0px;padding:0px">{}<span>'.format(fabric), unsafe_allow_html=True)
+
+            shirt_fit = st.selectbox(":blue[**Shirt Fit**]", ["Loose", "Regular", "Slim"],1)
+
             pockets = st.selectbox(":blue[**Pocket Type**]", ["No Pocket", "Single Pocket", "Double Pocket"],1)
             hemline = st.selectbox(":blue[**Shirt Hemline**]", ["Straight", "Straight with Cut","Rounded"],0)
 
@@ -261,7 +265,6 @@ else:
             if personalise_letter != "None":
                 st.markdown('<p style="{}">{}</p>'.format(styles['Calligraphy_Font'],personalise_letter), unsafe_allow_html=True)
 
-            shirt_fit = st.selectbox(":blue[**Fit**]", ["Loose", "Regular", "Slim"],1)
 
 
         st.markdown('<BR>',unsafe_allow_html=True)
