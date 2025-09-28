@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from io import BytesIO
 import platform
+import random
 
 
 # Path or URL for your logo
@@ -38,6 +39,9 @@ if "authenticated" not in st.session_state:
 
 #st.write(platform.system())
 
+image_arr = ['Shirt_White.png','Shirt_Beach_Party.png']
+random_image = random.choice(image_arr)
+
 c1,c2,c3 = st.columns((10,2,10))
 c2.markdown('<BR>',unsafe_allow_html=True)
 c2.image(LOGO_PATH, width=85)  # Adjust width as needed
@@ -58,7 +62,7 @@ st.markdown(html_text, unsafe_allow_html=True)
 
 
 c1,buf,c2 = st.columns((26,3,12))
-c2.image("Shirt_White.png", width=180)  # Adjust width as needed
+c2.image(random_image, width=180)  # Adjust width as needed
 
 html_subtext = '<BR><BR><div style="font-family: Arial, sans-serif; font-size: 1.0em; line-height: 1.5; color:#606770"> \
   <em>Hurry, place your order now (<span><strong>Side Menu --> Buy a Shirt</strong></span>) and be a part of <strong><span>Affordable Classics</strong></span>.</em></div>'
