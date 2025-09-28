@@ -51,7 +51,7 @@ html_text = '<BR><div style="font-family: Arial, sans-serif; font-size: 1.1em; l
   That’s why we offer custom-fit shirts, crafted precisely to your measurements. \
   Our bespoke creations, bring comfort, style and personal flair right to your doorstep.<BR><BR> \
   <em>Place your order today and embrace the elegance of Affordable Classics. \
-  The collection of Linen blend & Cotton fabrics are so comfortable and trendy that you will never want to take it off.</em></div><BR><BR>'
+  Our collection of Linen blend & Cotton fabrics are so comfortable and trendy that you will never want to take it off.</em></div><BR><BR>'
 
 
 st.markdown(html_text, unsafe_allow_html=True)
